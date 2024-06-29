@@ -46,10 +46,11 @@ public class Main {
         String transactionsPath = rootPath + "/data/Transaction.txt";
 
         String customerOutPath = rootPath + "/data/CustomerOut.txt";
+//23232534 11-11-2022 11-11-2024
 
         customerRepo.getAllCustomer(customersPath);
         accountRepo.fetchAccount(accountsPath);
-        transactionRepo.fetchTransactions(transactionsPath);
+        Function.fetchTransactions(transactionsPath);
 
         customerRepo.writeAllCustomer(customerOutPath);
 
@@ -72,7 +73,8 @@ public class Main {
                         Function.displayBalance();
                         break;
                     case "3":
-                        System.out.println("3");
+                        System.out.println("------- Transaction History -------");
+                        Function.displayTransactionsByDate();
                         break;
                     case "4":
                         System.out.println("Thank you for using our service");
@@ -85,17 +87,6 @@ public class Main {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-
         } while (!flag);
-
-
-        System.out.println("====Customer");
-        customers.forEach(System.out::println);
-        System.out.println();
-        System.out.println("====Account");
-        accounts.forEach(System.out::println);
-        System.out.println();
-        System.out.println("====Transaction");
-        transactions.forEach(System.out::println);
     }
 }

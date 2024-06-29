@@ -10,6 +10,8 @@ import Global.Format;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,31 +29,6 @@ public class TransactionRepo implements IServiceBank<TransactionRepo> {
         return Optional.empty();
     }
 
-    public List<Transaction> fetchTransactions(String transactionPath) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(transactionPath));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(";");
-                if (!line.isEmpty()) {
-                    Account accountInsert = accountRepo.findAccountById(data[1]).get();
-                    EType type = EType.valueOf(data[3]);
-                    EStatus status = EStatus.valueOf(data[5]);
-                    transactions.add(new Transaction(
-                            Integer.parseInt(data[0])
-                            ,accountInsert
-                            ,Float.parseFloat(data[2])
-                            ,type
-                            , Format.convertStringToLocalDateTime(data[4])
-                            ,status));
-                }
-            }
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        return transactions;
-    }
-
     public Map.Entry<Transaction, Double> createTransaction(Transaction transaction) {
         transactions.add(transaction);
         Account account = transaction.getAccount();
@@ -64,5 +41,15 @@ public class TransactionRepo implements IServiceBank<TransactionRepo> {
                 ));
         return Map.entry(transaction, transactionMap.get(transaction));
     }
+
+    public List<Map.Entry<Account, List<Transaction>>> getTransactionByDate(LocalDate startDate, LocalDate endDate, Account account) {
+        return transactions.stream()
+                .filter(t->t.getDateTime().isAfter(startDate.atStartOfDay())
+                        && t.getDateTime().isBefore(endDate.atStartOfDay())
+                        && t.getAccount().equals(account))
+                .collect(Collectors.groupingBy(Transaction::getAccount))
+                .entrySet().stream().toList();
+    }
+
 
 }

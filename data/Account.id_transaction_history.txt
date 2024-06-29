@@ -1,0 +1,1 @@
+[Transaction{id=3, account=23232534, amount=1.0E7, type=DEPOSIT, dateTime=2023-11-20T09:25:20, status=C}]
