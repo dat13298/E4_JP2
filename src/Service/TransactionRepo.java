@@ -10,8 +10,11 @@ import Global.Format;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TransactionRepo implements IServiceBank<TransactionRepo> {
     public static List<Transaction> transactions;
@@ -47,6 +50,19 @@ public class TransactionRepo implements IServiceBank<TransactionRepo> {
             System.out.println(e.getMessage());
         }
         return transactions;
+    }
+
+    public Map.Entry<Transaction, Double> createTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        Account account = transaction.getAccount();
+        account.setBalance(account.getBalance() - transaction.getAmount());
+        transaction.setStatus(EStatus.C);
+        Map<Transaction, Double> transactionMap = transactions.stream()
+                .collect(Collectors.toMap(
+                        tm -> tm,
+                        tm -> tm.getAccount().getBalance()
+                ));
+        return Map.entry(transaction, transactionMap.get(transaction));
     }
 
 }

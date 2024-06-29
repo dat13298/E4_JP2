@@ -46,4 +46,7 @@ public class AccountRepo implements IServiceBank<Account> {
         }
         return accounts;
     }
+    public boolean isEnoughBalance(Account account, float amount) {
+        return account.getBalance() >= amount;
+    }
 }

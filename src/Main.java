@@ -1,5 +1,6 @@
 import Entity.*;
 import Global.Format;
+import Global.Function;
 import Service.AccountRepo;
 import Service.CustomerRepo;
 import Service.TransactionRepo;
@@ -35,6 +36,10 @@ public class Main {
         TransactionRepo.transactions = transactions;
         TransactionRepo.accountRepo = accountRepo;
 
+        Function.accountRepo = accountRepo;
+        Function.transactionRepo = transactionRepo;
+        Function.transactions = transactions;
+
         String rootPath = System.getProperty("user.dir");
         String customersPath = rootPath + "/data/Customer.txt";
         String accountsPath = rootPath + "/data/Account.txt";
@@ -55,14 +60,16 @@ public class Main {
                 System.out.println("2. Balance");
                 System.out.println("3. Transaction History");
                 System.out.println("4. Exit");
-                System.out.println("Enter your choice: ");
+                System.out.print("Enter your choice: ");
                 selected = br.readLine();
                 switch (selected) {
                     case "1":
-                        System.out.println("1");
+                        System.out.println("------- Transaction -------");
+                        Function.inputTransaction();
                         break;
                     case "2":
-                        System.out.println("2");
+                        System.out.println("------- Display Balance -------");
+                        Function.displayBalance();
                         break;
                     case "3":
                         System.out.println("3");
