@@ -1,0 +1,3 @@
+Customer{id=1, name='Mr Bean', phone='+121532636'}
+Customer{id=2, name='Mrs.Anna', phone='+182435466'}
+Customer{id=3, name='Ms.Algel', phone='+842425356'}
