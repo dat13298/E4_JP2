@@ -1,16 +1,11 @@
 import Entity.*;
-import Global.Format;
 import Global.Function;
 import Service.AccountRepo;
 import Service.CustomerRepo;
 import Service.TransactionRepo;
-import com.sun.jdi.Value;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +33,10 @@ public class Main {
 
         Function.accountRepo = accountRepo;
         Function.transactionRepo = transactionRepo;
+        Function.customerRepo = customerRepo;
         Function.transactions = transactions;
+        Function.accounts = accounts;
+        Function.customers = customers;
 
         String rootPath = System.getProperty("user.dir");
         String customersPath = rootPath + "/data/Customer.txt";
@@ -48,15 +46,15 @@ public class Main {
         String customerOutPath = rootPath + "/data/CustomerOut.txt";
 //23232534 11-11-2022 11-11-2024
 
-        customerRepo.getAllCustomer(customersPath);
-        accountRepo.fetchAccount(accountsPath);
-        Function.fetchTransactions(transactionsPath);
+        Function.getAllCustomer(customersPath);
+        Function.getAllAccount(accountsPath);
+        Function.getAllTransactions(transactionsPath);
 
-        customerRepo.writeAllCustomer(customerOutPath);
+        Function.writeAllCustomer(customerOutPath);
 
         do {
             try {
-                System.out.println("===========MENU");
+                System.out.println("=========== MENU ===========");
                 System.out.println("1. Transaction");
                 System.out.println("2. Balance");
                 System.out.println("3. Transaction History");

@@ -25,27 +25,6 @@ public class AccountRepo implements IServiceBank<Account> {
         return accounts.stream().filter(account -> account.getId().equals(id)).findFirst();
     }
 
-    public List<Account> fetchAccount(String accountsPath){
-        try{
-            BufferedReader accountReader = new BufferedReader(new FileReader(accountsPath));
-            String line;
-            while ((line = accountReader.readLine()) != null) {
-                String[] data = line.split(";");
-                if (!line.isEmpty()) {
-                    Customer customerInsert = customerRepo.findById(Integer.parseInt(data[1])).get();
-                    ECurrency status = ECurrency.valueOf(data[3]);
-                    accounts.add(new Account(
-                            data[0]
-                            ,customerInsert
-                            ,Float.parseFloat(data[2])
-                            ,status));
-                }
-            }
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        return accounts;
-    }
     public boolean isEnoughBalance(Account account, float amount) {
         return account.getBalance() >= amount;
     }

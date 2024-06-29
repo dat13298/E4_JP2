@@ -1,10 +1,8 @@
 package Global;
 
-import Entity.Account;
-import Entity.EStatus;
-import Entity.EType;
-import Entity.Transaction;
+import Entity.*;
 import Service.AccountRepo;
+import Service.CustomerRepo;
 import Service.TransactionRepo;
 
 import java.io.*;
@@ -16,9 +14,94 @@ import java.util.Optional;
 public class Function {
     public static AccountRepo accountRepo;
     public static TransactionRepo transactionRepo;
+    public static CustomerRepo customerRepo;
     public static List<Transaction> transactions;
+    public static List<Account> accounts;
+    public static List<Customer> customers;
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+
+    /*GET FROM FILE*/
+
+    public static void getAllCustomer(String customersPath) {
+        try {
+            BufferedReader customerReader = new BufferedReader(new FileReader(customersPath));
+            String line;
+            while ((line = customerReader.readLine()) != null) {
+                String[] data = line.split(";");
+                if (!line.isEmpty()) {
+                    customers.add(new Customer(Integer.parseInt(data[0]), data[1], data[2]));
+                }
+            }
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void getAllTransactions(String transactionPath) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(transactionPath));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                if (!line.isEmpty()) {
+                    Account accountInsert = accountRepo.findAccountById(data[1]).get();
+                    EType type = EType.valueOf(data[3]);
+                    EStatus status = EStatus.valueOf(data[5]);
+                    transactions.add(new Transaction(
+                            Integer.parseInt(data[0])
+                            ,accountInsert
+                            ,Float.parseFloat(data[2])
+                            ,type
+                            , Format.convertStringToLocalDateTime(data[4])
+                            ,status));
+                }
+            }
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void getAllAccount(String accountsPath){
+        try{
+            BufferedReader accountReader = new BufferedReader(new FileReader(accountsPath));
+            String line;
+            while ((line = accountReader.readLine()) != null) {
+                String[] data = line.split(";");
+                if (!line.isEmpty()) {
+                    Customer customerInsert = customerRepo.findById(Integer.parseInt(data[1])).get();
+                    ECurrency status = ECurrency.valueOf(data[3]);
+                    accounts.add(new Account(
+                            data[0]
+                            ,customerInsert
+                            ,Float.parseFloat(data[2])
+                            ,status));
+                }
+            }
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /*WRITE FILE*/
+
+    public static void writeAllCustomer(String customersPath) {
+        try {
+            BufferedWriter customerWriter = new BufferedWriter(new FileWriter(customersPath));
+            customers.forEach(c->{
+                try {
+                    customerWriter.write(c.toString() + "\n");
+                }catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
+            });
+            customerWriter.close();
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /*TRANSACTION*/
 
     public static void inputTransaction(){
         String accountNumber;
@@ -56,6 +139,8 @@ public class Function {
         } while (!flag);
     }
 
+    /*GET BALANCE BY CUSTOMER*/
+
     public static void displayBalance(){
         boolean flag = false;
         String accountNumber;
@@ -76,6 +161,8 @@ public class Function {
             }
         }while (!flag);
     }
+
+    /*GET TRANSACTION BY DATE*/
 
     public static void displayTransactionsByDate(){
         boolean flag = false;
@@ -115,29 +202,7 @@ public class Function {
         }while (!flag);
     }
 
-    public static void fetchTransactions(String transactionPath) {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(transactionPath));
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(";");
-                if (!line.isEmpty()) {
-                    Account accountInsert = accountRepo.findAccountById(data[1]).get();
-                    EType type = EType.valueOf(data[3]);
-                    EStatus status = EStatus.valueOf(data[5]);
-                    transactions.add(new Transaction(
-                            Integer.parseInt(data[0])
-                            ,accountInsert
-                            ,Float.parseFloat(data[2])
-                            ,type
-                            , Format.convertStringToLocalDateTime(data[4])
-                            ,status));
-                }
-            }
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-    }
+    /*WRITE FILE IF SAVE*/
 
     public static void writeTransactionsToFile(List<Map.Entry<Account, List<Transaction>>> listMapTransaction){
         String rootPath = System.getProperty("user.dir");
