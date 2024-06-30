@@ -130,6 +130,16 @@ public class Function {
                             EStatus.P
                     );
                     System.out.println(transactionRepo.createTransaction(transaction));
+                } else {
+                    Transaction transaction = new Transaction(
+                            transactions.size()+1,
+                            account,
+                            amount,
+                            EType.WITHDRAWAL,
+                            LocalDateTime.now(),
+                            EStatus.R
+                    );
+                    throw new Exception("Not enough balance");
                 }
             } catch (Exception e){
                 System.out.println(e.getMessage());
