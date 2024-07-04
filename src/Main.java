@@ -64,7 +64,8 @@ public class Main {
                 switch (selected) {
                     case "1":
                         System.out.println("------- Transaction -------");
-                        Function.inputTransaction();
+                        Transaction transactionNew = Function.inputTransaction();
+                        System.out.println(transactionNew);
                         break;
                     case "2":
                         System.out.println("------- Display Balance -------");

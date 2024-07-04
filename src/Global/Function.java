@@ -103,11 +103,12 @@ public class Function {
 
     /*TRANSACTION*/
 
-    public static void inputTransaction(){
+    public static Transaction inputTransaction(){
         String accountNumber;
         float amount;
         boolean flag = false;
         Account account;
+        Transaction transaction = null;
         Optional<Account> opAccount;
 
         do {
@@ -121,24 +122,19 @@ public class Function {
                 amount = Float.parseFloat(br.readLine());
                 if(amount % 10 != 0) throw new Exception("Amount must be divisible by 10");
                 if(accountRepo.isEnoughBalance(account, amount)){
-                    Transaction transaction = new Transaction(
-                            transactions.size()+1,
-                            account,
-                            amount,
-                            EType.WITHDRAWAL,
-                            LocalDateTime.now(),
-                            EStatus.P
-                    );
-                    System.out.println(transactionRepo.createTransaction(transaction));
+                    transaction.setId(transactions.size());
+                    transaction.setAccount(account);
+                    transaction.setAmount(amount);
+                    transaction.setType(EType.WITHDRAWAL);
+                    transaction.setDateTime(LocalDateTime.now());
+                    transaction.setStatus(EStatus.P);
                 } else {
-                    Transaction transaction = new Transaction(
-                            transactions.size()+1,
-                            account,
-                            amount,
-                            EType.WITHDRAWAL,
-                            LocalDateTime.now(),
-                            EStatus.R
-                    );
+                    transaction.setId(transactions.size());
+                    transaction.setAccount(account);
+                    transaction.setAmount(amount);
+                    transaction.setType(EType.WITHDRAWAL);
+                    transaction.setDateTime(LocalDateTime.now());
+                    transaction.setStatus(EStatus.R);
                     throw new Exception("Not enough balance");
                 }
             } catch (Exception e){
@@ -147,6 +143,8 @@ public class Function {
                 flag = true;
             }
         } while (!flag);
+        transactions.add(transaction);
+        return transaction;
     }
 
     /*GET BALANCE BY CUSTOMER*/
