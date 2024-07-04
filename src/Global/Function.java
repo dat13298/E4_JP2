@@ -122,7 +122,7 @@ public class Function {
                 amount = Float.parseFloat(br.readLine());
                 if(amount % 10 != 0) throw new Exception("Amount must be divisible by 10");
                 if(accountRepo.isEnoughBalance(account, amount)){
-                    transaction.setId(transactions.size());
+                    transaction.setId(transactions.size()+1);
                     transaction.setAccount(account);
                     transaction.setAmount(amount);
                     transaction.setType(EType.WITHDRAWAL);
